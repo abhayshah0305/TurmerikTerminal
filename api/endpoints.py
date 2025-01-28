@@ -1,8 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from services.voi_calculator import calculate_voi
 from pydantic import BaseModel, Field
 from .models import VOIRequest
-
 
 router = APIRouter()
 
