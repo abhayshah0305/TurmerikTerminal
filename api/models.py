@@ -13,6 +13,5 @@ class ClinicalTrial(Base):
 
 class VOIRequest(BaseModel):
     cost: float
-    success_prob: float = Field(..., ge=0, le=1, description="Success probability must be between 0 and 1")
+    success_prob: float
     roi: float
-
