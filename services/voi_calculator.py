@@ -1,4 +1,4 @@
 def calculate_voi(cost, success_prob, roi):
-    ev_current = cost * success_prob
-    ev_perfect = roi
-    return ev_perfect - ev_current
+    if not (0 <= success_prob <= 1):
+        raise ValueError("Success probability must be between 0 and 1.")
+    return (success_prob * roi) - cost
