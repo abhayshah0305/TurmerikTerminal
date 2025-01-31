@@ -1,13 +1,15 @@
 import requests
 
-def fetch_trials(search_term, fields, page_size):
-    url = "https://clinicaltrials.gov/api/v2/studies"
-    params = {
-        'query.cond': search_term,
-        'fields': fields,
-        'pageSize': page_size
-    }
-    response = requests.get(url, params=params)
+def fetch_clinical_trials(search_term: str, limit: int = 5):
+    """
+    Fetch clinical trials from ClinicalTrials.gov API.
+    """
+    url = f"https://clinicaltrials.gov/api/v2/studies?query.cond={search_term}&fields=protocolSection.identificationModule.nctId,protocolSection.identificationModule.briefTitle,protocolSection.conditionsModule.conditions&pageSize={limit}"
+
+    response = requests.get(url)
+    
     if response.status_code != 200:
-        raise Exception(f"Failed to fetch trials: {response.status_code}, {response.text}")
-    return response.json()
+        return None
+
+    data = response.json()
+    return data.get("studies", [])
