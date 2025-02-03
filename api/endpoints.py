@@ -1,7 +1,9 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
 from services.clinical_trials_service import fetch_clinical_trials
-from services.fetch_funding_service import fetch_trial_funding
 from services.voi_calculator import calculate_voi
+from database import get_db
+from models import FundingProject
 
 router = APIRouter()
 
@@ -15,12 +17,12 @@ async def fetch_trials(search_term: str, limit: int = 5):
         raise HTTPException(status_code=404, detail="No trials found.")
     return {"trials": trials}
 
-@router.post("/api/fetch-trial-funding/")
-async def fetch_funding(nct_id: str):
+@router.get("/api/fetch-trial-funding/")
+async def fetch_funding(project_num: str, db: Session = Depends(get_db)):
     """
-    Fetch trial funding data using an NCT ID.
+    Fetch trial funding data from the **database** instead of making an API call.
     """
-    funding_info = fetch_trial_funding(nct_id)
+    funding_info = db.query(FundingProject).filter(FundingProject.project_num == project_num).first()
     if not funding_info:
         raise HTTPException(status_code=404, detail="No funding information found.")
     return {"funding": funding_info}
