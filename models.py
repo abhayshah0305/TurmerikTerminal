@@ -11,8 +11,8 @@ class FundingProject(Base):
     state = Column(String)
     country = Column(String)
     award_amount = Column(Float)
-    direct_cost = Column(Float)  # ✅ New field
-    indirect_cost = Column(Float)  # ✅ New field
+    direct_cost = Column(Float)  
+    indirect_cost = Column(Float)  
     agency_name = Column(String)
     project_title = Column(String)
     project_start_date = Column(String)
