@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Float, Integer
+from sqlalchemy import Column, String, Float, Integer, Boolean
 from database import Base
 
 class FundingProject(Base):
@@ -18,3 +18,4 @@ class FundingProject(Base):
     project_start_date = Column(String)
     project_end_date = Column(String)
     project_url = Column(String)
+    uses_dct = Column(Boolean, default=False)

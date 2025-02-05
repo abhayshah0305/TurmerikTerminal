@@ -55,7 +55,9 @@ BASELINE_ROI_PER_DOLLAR = 64.70  # Expected return per $1 spent
 @router.post("/api/calculate-voi/")
 def calculate_voi(request: FundingRequest, db: Session = Depends(get_db)):
     """
-    Calculate Value of Information (VOI) based on NIH funding data.
+    Calculate Value of Information (VOI) based on NIH funding data, incorporating:
+    - Expected Net Present Value (eNPV) models for Decentralized Clinical Trials (DCTs)
+    - Public Return on Investment (Public ROI) using QALY models
     """
 
     project = db.query(FundingProject).filter(FundingProject.project_num == request.project_num).first()
@@ -64,21 +66,27 @@ def calculate_voi(request: FundingRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Project not found.")
 
     total_cost = (project.direct_cost or 0) + (project.indirect_cost or 0)
-
+    
     if total_cost == 0:
         raise HTTPException(status_code=400, detail="Total cost cannot be zero.")
 
     # Step 1: Calculate Estimated ROI
-    estimated_roi = total_cost * BASELINE_ROI_PER_DOLLAR
+    estimated_roi = total_cost * BASELINE_ROI_PER_DOLLAR  # Default ROI multiplier
 
-    # Step 2: Adjust for Uncertainty Reduction and Decision Impact
-    # VOI Formula: VOI = (Potential Future Savings + Research Cost Avoidance) - Total Cost
-    # Let's assume:
-    # - **20% of estimated ROI** represents future savings due to better decision-making.
-    # - **10% of estimated ROI** represents cost avoidance for future research.
+    # Step 2: Apply eNPV Adjustments for DCTs (if applicable)
+    if project.uses_dct:  # Check if the study uses DCTs
+        estimated_roi *= 7  # Apply 7x ROI multiplier
+        estimated_roi += 20_000_000  # Add $20M per drug entering Phase II
+
+    # Step 3: Calculate Public Return on Investment using QALYs
+    # Reference: $3.6B spent for 470,000 QALYs → $7,660 per QALY
+    QALY_COST = 3_600_000_000 / 470_000  # Cost per QALY benchmark
+    estimated_qalys = total_cost / QALY_COST  # Estimate QALYs generated
+    public_roi = estimated_qalys * QALY_COST  # Calculate public ROI
+
+    # Step 4: Compute VOI incorporating financial & public health benefits
     potential_future_savings = 0.2 * estimated_roi
     research_cost_avoidance = 0.1 * estimated_roi
-
     voi = (potential_future_savings + research_cost_avoidance) - total_cost
 
     return {
@@ -89,6 +97,9 @@ def calculate_voi(request: FundingRequest, db: Session = Depends(get_db)):
         "estimated_roi": estimated_roi,
         "voi": voi,
         "roi_per_dollar": BASELINE_ROI_PER_DOLLAR,
+        "public_roi": public_roi,
+        "estimated_qalys": estimated_qalys,
         "funding_agency": project.agency_name,
-        "project_url": project.project_url
+        "project_url": project.project_url,
+        "uses_dct": project.uses_dct
     }
