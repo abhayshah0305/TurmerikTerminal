@@ -16,7 +16,7 @@ export function TurmerikDashboard() {
   // Function to call the API
   const fetchData = async () => {
     if (!projectNumber.trim()) {
-      setError("❌ Please enter a valid NIH project number.");
+      setError("Please enter a valid NIH project number.");
       return;
     }
 
@@ -31,7 +31,7 @@ export function TurmerikDashboard() {
       }
       setProjectData(result);
     } catch (err) {
-      setError(err.message || "❌ Error fetching data. Please try again.");
+      setError(err.message || "Error fetching data. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -39,9 +39,9 @@ export function TurmerikDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center p-8">
-      <div className="max-w-7xl w-full"> {/*Increased width */}
+      <div className="max-w-5xl w-full"> {/*Increased width */}
         <h1 className="text-3xl font-bold text-gray-900 text-center">
-          TurmerikTerminal: Investment Decision Support
+          Investment Decision Analysis
         </h1>
 
         {/* Input Section */}
