@@ -11,7 +11,7 @@ import os
 #Load OpenAI API Key
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
-    raise ValueError("❌ ERROR: OpenAI API key is missing. Set it in the .env file.")
+    raise ValueError("ERROR: OpenAI API key is missing. Set it in the .env file.")
 
 client = openai.OpenAI(api_key=api_key)
 
