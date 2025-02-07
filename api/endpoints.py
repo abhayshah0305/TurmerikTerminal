@@ -9,8 +9,6 @@ import openai
 import os
 
 # ✅ Load OpenAI API Key
-import openai
-
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     raise ValueError("❌ ERROR: OpenAI API key is missing. Set it in the .env file.")
@@ -127,5 +125,5 @@ def analyze_investment(request: FundingRequest, db: Session = Depends(get_db)):
         "funding_agency": project.agency_name,
         "project_url": project.project_url,
         "uses_dct": project.uses_dct,
-        "investment_decision": decision_text
+        "investment_decision": decision_text  # ✅ GPT Response
     }

@@ -14,7 +14,7 @@ export default function Home() {
           height={48}
           className="rounded-full"
         />
-        <h1 className="text-3xl font-bold">TurmerikTerminal: Investment Decision Support</h1>
+        <h1 className="text-3xl font-bold">TurmerikTerminal</h1>
       </header>
       <TurmerikDashboard />
     </main>
