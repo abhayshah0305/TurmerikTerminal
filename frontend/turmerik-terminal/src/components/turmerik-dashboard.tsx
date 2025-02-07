@@ -13,7 +13,7 @@ export function TurmerikDashboard() {
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(""); // Error state
 
-  // ✅ Function to call the API
+  // Function to call the API
   const fetchData = async () => {
     if (!projectNumber.trim()) {
       setError("❌ Please enter a valid NIH project number.");
@@ -39,7 +39,7 @@ export function TurmerikDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center p-8">
-      <div className="max-w-7xl w-full"> {/* ✅ Increased width */}
+      <div className="max-w-7xl w-full"> {/*Increased width */}
         <h1 className="text-3xl font-bold text-gray-900 text-center">
           TurmerikTerminal: Investment Decision Support
         </h1>

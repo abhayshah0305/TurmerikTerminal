@@ -8,7 +8,7 @@ import logging
 import openai
 import os
 
-# ✅ Load OpenAI API Key
+#Load OpenAI API Key
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     raise ValueError("❌ ERROR: OpenAI API key is missing. Set it in the .env file.")
@@ -17,7 +17,7 @@ client = openai.OpenAI(api_key=api_key)
 
 router = APIRouter()
 
-# ✅ Request Models
+#Request Models
 class SearchRequest(BaseModel):
     search_term: str
     limit: int = 5
@@ -25,7 +25,7 @@ class SearchRequest(BaseModel):
 class FundingRequest(BaseModel):
     project_num: str
 
-# ✅ Fetch Clinical Trials from ClinicalTrials.gov
+#Fetch Clinical Trials from ClinicalTrials.gov
 @router.post("/api/fetch-clinical-trials/")
 async def fetch_trials(request: SearchRequest):
     logging.info(f"Fetching trials for: {request.search_term} with limit {request.limit}")
@@ -37,7 +37,7 @@ async def fetch_trials(request: SearchRequest):
 
     return {"trials": trials}
 
-# ✅ Combined Endpoint: VOI Calculation + ChatGPT Investment Decision
+#Combined Endpoint: VOI Calculation + ChatGPT Investment Decision
 BASELINE_ROI_PER_DOLLAR = 64.70  # Expected return per $1 spent
 
 @router.post("/api/analyze-investment/")
@@ -48,7 +48,7 @@ def analyze_investment(request: FundingRequest, db: Session = Depends(get_db)):
     2. Uses ChatGPT to provide an investment decision.
     """
 
-    # ✅ Fetch project data from DB
+    #Fetch project data from DB
     project = db.query(FundingProject).filter(FundingProject.project_num == request.project_num).first()
 
     if not project:
@@ -58,25 +58,25 @@ def analyze_investment(request: FundingRequest, db: Session = Depends(get_db)):
     if total_cost == 0:
         raise HTTPException(status_code=400, detail="Total cost cannot be zero.")
 
-    # ✅ Step 1: Calculate Estimated ROI
+    #Step 1: Calculate Estimated ROI
     estimated_roi = total_cost * BASELINE_ROI_PER_DOLLAR
 
-    # ✅ Step 2: Apply eNPV Adjustments for Decentralized Clinical Trials (DCTs)
+    #Step 2: Apply eNPV Adjustments for Decentralized Clinical Trials (DCTs)
     if project.uses_dct:
         estimated_roi *= 7  # Apply 7x ROI multiplier
         estimated_roi += 20_000_000  # Add $20M per drug entering Phase II
 
-    # ✅ Step 3: Calculate Public Return on Investment using QALYs
+    #Step 3: Calculate Public Return on Investment using QALYs
     QALY_COST = 3_600_000_000 / 470_000  # Cost per QALY benchmark
     estimated_qalys = total_cost / QALY_COST
     public_roi = estimated_qalys * QALY_COST
 
-    # ✅ Step 4: Compute VOI incorporating financial & public health benefits
+    #Step 4: Compute VOI incorporating financial & public health benefits
     potential_future_savings = 0.2 * estimated_roi
     research_cost_avoidance = 0.1 * estimated_roi
     voi = (potential_future_savings + research_cost_avoidance) - total_cost
 
-    # ✅ Step 5: Generate ChatGPT Investment Decision
+    #Generate ChatGPT Investment Decision
     chat_prompt = f"""
     💡 **Investment Decision Analysis**
 
@@ -96,7 +96,7 @@ def analyze_investment(request: FundingRequest, db: Session = Depends(get_db)):
     **Decision:** Should this research be funded? Answer Yes or No, then provide a short explanation in simple terms.
     """
 
-    # ✅ Call OpenAI API
+    # Call OpenAI API
     try:
         response = client.chat.completions.create(
             model="gpt-4",
@@ -111,7 +111,7 @@ def analyze_investment(request: FundingRequest, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating response: {str(e)}")
 
-    # ✅ Final Response
+    #Response
     return {
         "project_num": project.project_num,
         "project_title": project.project_title,
@@ -125,5 +125,5 @@ def analyze_investment(request: FundingRequest, db: Session = Depends(get_db)):
         "funding_agency": project.agency_name,
         "project_url": project.project_url,
         "uses_dct": project.uses_dct,
-        "investment_decision": decision_text  # ✅ GPT Response
+        "investment_decision": decision_text  
     }
