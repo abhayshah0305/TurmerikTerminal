@@ -4,7 +4,7 @@ TurmerikTerminal is a web-based decision support tool designed to analyze NIH-fu
 
 ---
 
-## **🚀 Features**
+## ** Features**
 - **NIH Project Search**: Enter a valid NIH project number to analyze.
 - **Financial Metrics**: View key financial indicators like **Total Cost, ROI, Value of Information (VOI), and Public ROI**.
 - **Investment Decision**: Uses **AI-generated analysis** to provide a funding recommendation.
@@ -13,7 +13,7 @@ TurmerikTerminal is a web-based decision support tool designed to analyze NIH-fu
 
 ---
 
-## **🛠 Tech Stack**
+## ** Tech Stack**
 ### **Frontend (Next.js)**
 - **React** & **Next.js 14**
 - **Tailwind CSS** for responsive UI
@@ -21,7 +21,7 @@ TurmerikTerminal is a web-based decision support tool designed to analyze NIH-fu
 - **Recharts** for data visualization
 - **Fetch API** to interact with backend
 
-### **Backend (FastAPI)**
+### ** Backend (FastAPI)**
 - **FastAPI** for API development
 - **PostgreSQL** for database storage
 - **SQLAlchemy** for ORM
@@ -30,7 +30,7 @@ TurmerikTerminal is a web-based decision support tool designed to analyze NIH-fu
 
 ---
 
-## **📌 Installation & Setup**
+## ** Installation & Setup**
 ### **1️⃣ Clone the Repository**
 ```sh
 git clone https://github.com/yourusername/TurmerikTerminal.git
