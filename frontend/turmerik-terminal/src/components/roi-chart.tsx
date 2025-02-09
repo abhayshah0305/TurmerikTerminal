@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { ProjectData } from "@/types/project-data"
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts"
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend } from "recharts"
 
 export function ROIChart({ data }: { data: ProjectData }) {
   const chartData = [
@@ -19,12 +19,12 @@ export function ROIChart({ data }: { data: ProjectData }) {
       </CardHeader>
       <CardContent className="h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData}>
+            <BarChart data={chartData}>
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
             <Bar dataKey="value" fill="#8884d8" />
-          </BarChart>
+            </BarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
