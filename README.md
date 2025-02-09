@@ -5,11 +5,11 @@ TurmerikTerminal is a web-based decision support tool designed to analyze NIH-fu
 ---
 
 ## **🚀 Features**
-- 🔍 **NIH Project Search**: Enter a valid NIH project number to analyze.
-- 📊 **Financial Metrics**: View key financial indicators like **Total Cost, ROI, Value of Information (VOI), and Public ROI**.
-- 💡 **Investment Decision**: Uses **AI-generated analysis** to provide a funding recommendation.
-- 📈 **Visualization**: ROI and Quality-Adjusted Life Years (QALYs) displayed using charts.
-- 🔗 **Clinical Trials Data**: Fetches real-time trial information from **ClinicalTrials.gov**.
+- **NIH Project Search**: Enter a valid NIH project number to analyze.
+- **Financial Metrics**: View key financial indicators like **Total Cost, ROI, Value of Information (VOI), and Public ROI**.
+- **Investment Decision**: Uses **AI-generated analysis** to provide a funding recommendation.
+- **Visualization**: ROI and Quality-Adjusted Life Years (QALYs) displayed using charts.
+- **Clinical Trials Data**: Fetches real-time trial information from **ClinicalTrials.gov**.
 
 ---
 
