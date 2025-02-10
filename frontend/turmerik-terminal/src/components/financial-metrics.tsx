@@ -1,4 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip";
+import { InfoCircledIcon } from "@radix-ui/react-icons"
 import type { ProjectData } from "@/types/project-data"
 
 export function FinancialMetrics({ data }: { data: ProjectData }) {
