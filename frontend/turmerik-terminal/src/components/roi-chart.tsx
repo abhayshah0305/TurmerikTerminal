@@ -17,17 +17,16 @@ export function ROIChart({ data }: { data: ProjectData }) {
       <CardHeader>
         <CardTitle>ROI Comparison</CardTitle>
       </CardHeader>
-      <CardContent className="h-[300px]">
+      <CardContent className="h-[350px]"> {/* Increased height */}
         <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData}>
+          <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 50 }}>
             <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="value" fill="#8884d8" />
-            </BarChart>
+            <YAxis tickFormatter={(value) => value.toLocaleString()} tick={{ fontSize: 12 }} />
+            <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+            <Bar dataKey="value" fill="#8884d8" barSize={40} />
+          </BarChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
   )
 }
-
