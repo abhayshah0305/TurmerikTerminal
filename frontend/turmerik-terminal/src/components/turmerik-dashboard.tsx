@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ProjectInfo } from "./project-info"; // ✅ Import ProjectInfo
 import { FinancialMetrics } from "./financial-metrics";
 import { InvestmentDecision } from "./investment-decision";
 import { QALYsChart } from "./qalys-chart";
@@ -39,7 +40,7 @@ export function TurmerikDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center p-8">
-      <div className="max-w-6xl w-full"> {/*Increased width */}
+      <div className="max-w-6xl w-full"> {/* Increased width */}
         <h1 className="text-3xl font-bold text-gray-900 text-center">
           Investment Decision Analysis
         </h1>
@@ -75,12 +76,22 @@ export function TurmerikDashboard() {
         {/* Data Display */}
         {projectData && (
           <div className="mt-8 space-y-6">
+            {/* ✅ Project Information Section */}
+            <div className="bg-white p-6 rounded-lg shadow-md w-full">
+              <ProjectInfo data={projectData} />
+            </div>
+
+            {/* Financial Metrics */}
             <div className="bg-white p-6 rounded-lg shadow-md w-full">
               <FinancialMetrics data={projectData} />
             </div>
+
+            {/* Investment Decision */}
             <div className="bg-white p-6 rounded-lg shadow-md w-full">
               <InvestmentDecision data={projectData} />
             </div>
+
+            {/* Charts Section */}
             <div className="grid grid-cols-2 gap-6 mt-8">
               <div className="bg-white p-6 rounded-lg shadow-md w-full">
                 <QALYsChart data={projectData} />
