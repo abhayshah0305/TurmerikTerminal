@@ -1,20 +1,30 @@
 "use client";
 
-import { useState } from "react";
-import { ProjectInfo } from "./project-info"; // ✅ Import ProjectInfo
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import { jsPDF } from "jspdf";
+import { ProjectInfo } from "./project-info";
 import { FinancialMetrics } from "./financial-metrics";
 import { InvestmentDecision } from "./investment-decision";
-import { QALYsChart } from "./qalys-chart";
-import { ROIChart } from "./roi-chart";
 import { fetchProjectData } from "@/lib/api";
 
-export function TurmerikDashboard() {
-  const [projectNumber, setProjectNumber] = useState(""); // User input
-  const [projectData, setProjectData] = useState(null); // Stores API response
-  const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(""); // Error state
+// ✅ Ensure components load dynamically without hydration issues
+const QALYsChart = dynamic(() => import("./qalys-chart").then((mod) => mod.QALYsChart), { ssr: false });
+const ROIChart = dynamic(() => import("./roi-chart").then((mod) => mod.ROIChart), { ssr: false });
 
-  // Function to call the API
+export function TurmerikDashboard() {
+  const [projectNumber, setProjectNumber] = useState("");
+  const [projectData, setProjectData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [isClient, setIsClient] = useState(false);
+
+  // ✅ Ensure client-side rendering to prevent hydration errors
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // ✅ Fetch data when user enters a project number
   const fetchData = async () => {
     if (!projectNumber.trim()) {
       setError("Please enter a valid NIH project number.");
@@ -38,9 +48,46 @@ export function TurmerikDashboard() {
     }
   };
 
+  // ✅ Export project data to PDF
+  const exportToPDF = () => {
+    if (!projectData) return;
+
+    const doc = new jsPDF();
+    doc.setFont("helvetica", "bold");
+    doc.text("Investment Decision Report", 20, 20);
+    doc.setFont("helvetica", "normal");
+
+    // ✅ Project Information
+    doc.text(`Project Title: ${projectData.project_title}`, 20, 40);
+    doc.text(`Organization: ${projectData.organization}`, 20, 50);
+    doc.text(`Funding Agency: ${projectData.funding_agency}`, 20, 60);
+    doc.text(`Project URL: ${projectData.project_url}`, 20, 70);
+    doc.text(`Uses DCT: ${projectData.uses_dct ? "Yes" : "No"}`, 20, 80);
+
+    // ✅ Financial Metrics
+    doc.text("Financial Metrics:", 20, 100);
+    doc.text(`Total Cost: $${projectData.total_cost.toLocaleString()}`, 20, 110);
+    doc.text(`Estimated ROI: $${projectData.estimated_roi.toLocaleString()}`, 20, 120);
+    doc.text(`VOI: $${projectData.voi.toLocaleString()}`, 20, 130);
+    doc.text(`ROI per Dollar: $${projectData.roi_per_dollar.toFixed(2)}`, 20, 140);
+    doc.text(`Public ROI: $${projectData.public_roi.toLocaleString()}`, 20, 150);
+    doc.text(`Estimated QALYs: ${projectData.estimated_qalys.toFixed(2)}`, 20, 160);
+
+    // ✅ Investment Decision
+    doc.text("Investment Decision:", 20, 180);
+    doc.setFont("helvetica", "bold");
+    const decision = projectData.investment_decision.split("\n\n");
+    doc.text(decision[0], 20, 190);
+    doc.setFont("helvetica", "normal");
+    doc.text(decision[1], 20, 200, { maxWidth: 170 });
+
+    // ✅ Save the PDF
+    doc.save(`Investment_Report_${projectData.project_num}.pdf`);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center p-8">
-      <div className="max-w-6xl w-full"> {/* Increased width */}
+      <div className="max-w-6xl w-full">
         <h1 className="text-3xl font-bold text-gray-900 text-center">
           Investment Decision Analysis
         </h1>
@@ -73,25 +120,18 @@ export function TurmerikDashboard() {
           {error && <p className="text-red-500 mt-2 text-sm font-semibold">{error}</p>}
         </div>
 
-        {/* Data Display */}
-        {projectData && (
+        {/* Data Display (only if client-side & data exists) */}
+        {isClient && projectData && (
           <div className="mt-8 space-y-6">
-            {/* ✅ Project Information Section */}
             <div className="bg-white p-6 rounded-lg shadow-md w-full">
               <ProjectInfo data={projectData} />
             </div>
-
-            {/* Financial Metrics */}
             <div className="bg-white p-6 rounded-lg shadow-md w-full">
               <FinancialMetrics data={projectData} />
             </div>
-
-            {/* Investment Decision */}
             <div className="bg-white p-6 rounded-lg shadow-md w-full">
               <InvestmentDecision data={projectData} />
             </div>
-
-            {/* Charts Section */}
             <div className="grid grid-cols-2 gap-6 mt-8">
               <div className="bg-white p-6 rounded-lg shadow-md w-full">
                 <QALYsChart data={projectData} />
@@ -99,6 +139,16 @@ export function TurmerikDashboard() {
               <div className="bg-white p-6 rounded-lg shadow-md w-full">
                 <ROIChart data={projectData} />
               </div>
+            </div>
+
+            {/* ✅ Export Data Button */}
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={exportToPDF}
+                className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+              >
+                Export Data
+              </button>
             </div>
           </div>
         )}
