@@ -39,7 +39,7 @@ export function TurmerikDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center p-8">
-      <div className="max-w-5xl w-full"> {/*Increased width */}
+      <div className="max-w-6xl w-full"> {/*Increased width */}
         <h1 className="text-3xl font-bold text-gray-900 text-center">
           Investment Decision Analysis
         </h1>
@@ -47,7 +47,7 @@ export function TurmerikDashboard() {
         {/* Input Section */}
         <div className="bg-white shadow-md p-6 mt-6 rounded-lg w-full">
           <label className="text-lg font-semibold text-gray-800">
-            Enter NIH Project Number
+            Enter NIH Project Number:
           </label>
           <div className="flex items-center gap-4 mt-3">
             <input
@@ -81,7 +81,7 @@ export function TurmerikDashboard() {
             <div className="bg-white p-6 rounded-lg shadow-md w-full">
               <InvestmentDecision data={projectData} />
             </div>
-            <div className="grid grid-cols-2 gap-6 mt-6">
+            <div className="grid grid-cols-2 gap-6 mt-8">
               <div className="bg-white p-6 rounded-lg shadow-md w-full">
                 <QALYsChart data={projectData} />
               </div>

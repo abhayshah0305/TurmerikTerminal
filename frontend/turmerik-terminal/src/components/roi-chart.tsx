@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { ProjectData } from "@/types/project-data"
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, Label } from "recharts"
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Label } from "recharts"
 
 export function ROIChart({ data }: { data: ProjectData }) {
   const chartData = [
@@ -17,17 +17,17 @@ export function ROIChart({ data }: { data: ProjectData }) {
       <CardHeader>
         <CardTitle>ROI Comparison</CardTitle>
       </CardHeader>
-      <CardContent className="h-[350px]"> {/* Increased height */}
+      <CardContent className="h-[400px] w-[560px] mx-auto"> {/* Increased width */}
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} margin={{ top: 20, right: 30, left: 60, bottom: 80 }}>
+          <BarChart data={chartData} margin={{ top: 20, right: 30, left: 60, bottom: 50 }}>
             
-            {/* X-Axis with adjusted label position */}
-            <XAxis dataKey="name" tick={{ fontSize: 12 }}>
+            {/* X-Axis: Professionally aligned labels */}
+            <XAxis dataKey="name" tick={{ fontSize: 14 }} tickMargin={10}>
               
             </XAxis>
-            
-            {/* Y-Axis with added padding */}
-            <YAxis tickFormatter={(value) => value.toLocaleString()} tick={{ fontSize: 12 }} padding={{ top: 15, bottom: 0 }}>
+
+            {/* Y-Axis: Keeping professional look */}
+            <YAxis tickFormatter={(value) => value.toLocaleString()} tick={{ fontSize: 14 }} padding={{ top: 10, bottom: 0 }}>
               <Label value="Amount ($)" angle={-90} position="insideLeft" offset={-50} />
             </YAxis>
 
