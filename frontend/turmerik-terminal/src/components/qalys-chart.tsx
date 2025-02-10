@@ -1,36 +1,44 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import type { ProjectData } from "@/types/project-data"
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PieChart, Pie, Tooltip, Legend, ResponsiveContainer, Cell, Label } from "recharts";
+import type { ProjectData } from "@/types/project-data";
 
 export function QALYsChart({ data }: { data: ProjectData }) {
-  const chartData = [
-    { name: "Estimated QALYs", value: data.estimated_qalys },
-    { name: "Remaining", value: 100 - data.estimated_qalys }, // Assuming 100 is the maximum QALY
-  ]
+  const estimatedQALYs = Number(data.estimated_qalys.toFixed(2)); // Round off
+  const remainingQALYs = Number((100 - data.estimated_qalys).toFixed(2)); // Ensure sum is 100%
 
-  const COLORS = ["#0088FE", "#FFBB28"]
+  const chartData = [
+    { name: "Estimated QALYs", value: estimatedQALYs, color: "#007bff" },
+    { name: "Remaining", value: remainingQALYs, color: "#f4a742" },
+  ];
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>Estimated QALYs Impact</CardTitle>
       </CardHeader>
-      <CardContent className="h-[300px]">
-        <ResponsiveContainer width="100%" height="100%">
+      <CardContent className="h-[400px] flex flex-col items-center justify-center">
+        <ResponsiveContainer width="100%" height="80%">
           <PieChart>
-            <Pie data={chartData} cx="50%" cy="50%" labelLine={false} outerRadius={80} fill="#8884d8" dataKey="value">
+            <Pie
+              data={chartData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              label={({ name, value }) => `${value.toFixed(2)}`} // Round labels
+            >
               {chartData.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell key={`cell-${index}`} fill={entry.color} />
               ))}
             </Pie>
-            <Tooltip />
-            <Legend />
+            <Tooltip formatter={(value) => value.toFixed(2)} /> {/* Tooltip rounding */}
+            <Legend verticalAlign="bottom" align="center" height={40} />
           </PieChart>
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
-
