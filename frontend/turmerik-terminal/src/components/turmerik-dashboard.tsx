@@ -8,7 +8,6 @@ import { FinancialMetrics } from "./financial-metrics";
 import { InvestmentDecision } from "./investment-decision";
 import { fetchProjectData } from "@/lib/api";
 
-// ✅ Ensure components load dynamically without hydration issues
 const QALYsChart = dynamic(() => import("./qalys-chart").then((mod) => mod.QALYsChart), { ssr: false });
 const ROIChart = dynamic(() => import("./roi-chart").then((mod) => mod.ROIChart), { ssr: false });
 
@@ -19,12 +18,10 @@ export function TurmerikDashboard() {
   const [error, setError] = useState("");
   const [isClient, setIsClient] = useState(false);
 
-  // ✅ Ensure client-side rendering to prevent hydration errors
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  // ✅ Fetch data when user enters a project number
   const fetchData = async () => {
     if (!projectNumber.trim()) {
       setError("Please enter a valid NIH project number.");
@@ -48,7 +45,6 @@ export function TurmerikDashboard() {
     }
   };
 
-  // ✅ Export project data to PDF
   const exportToPDF = () => {
     if (!projectData) return;
 
@@ -57,14 +53,14 @@ export function TurmerikDashboard() {
     doc.text("Investment Decision Report", 20, 20);
     doc.setFont("helvetica", "normal");
 
-    // ✅ Project Information
+    
     doc.text(`Project Title: ${projectData.project_title}`, 20, 40);
     doc.text(`Organization: ${projectData.organization}`, 20, 50);
     doc.text(`Funding Agency: ${projectData.funding_agency}`, 20, 60);
     doc.text(`Project URL: ${projectData.project_url}`, 20, 70);
     doc.text(`Uses DCT: ${projectData.uses_dct ? "Yes" : "No"}`, 20, 80);
 
-    // ✅ Financial Metrics
+    
     doc.text("Financial Metrics:", 20, 100);
     doc.text(`Total Cost: $${projectData.total_cost.toLocaleString()}`, 20, 110);
     doc.text(`Estimated ROI: $${projectData.estimated_roi.toLocaleString()}`, 20, 120);
@@ -73,15 +69,12 @@ export function TurmerikDashboard() {
     doc.text(`Public ROI: $${projectData.public_roi.toLocaleString()}`, 20, 150);
     doc.text(`Estimated QALYs: ${projectData.estimated_qalys.toFixed(2)}`, 20, 160);
 
-    // ✅ Investment Decision
     doc.text("Investment Decision:", 20, 180);
     doc.setFont("helvetica", "bold");
     const decision = projectData.investment_decision.split("\n\n");
     doc.text(decision[0], 20, 190);
     doc.setFont("helvetica", "normal");
     doc.text(decision[1], 20, 200, { maxWidth: 170 });
-
-    // ✅ Save the PDF
     doc.save(`Investment_Report_${projectData.project_num}.pdf`);
   };
 
@@ -92,7 +85,7 @@ export function TurmerikDashboard() {
           Investment Decision Analysis
         </h1>
 
-        {/* Input Section */}
+
         <div className="bg-white shadow-md p-6 mt-6 rounded-lg w-full">
           <label className="text-lg font-semibold text-gray-800">
             Enter NIH Project Number:
@@ -116,11 +109,9 @@ export function TurmerikDashboard() {
             </button>
           </div>
 
-          {/* Error Handling */}
           {error && <p className="text-red-500 mt-2 text-sm font-semibold">{error}</p>}
         </div>
 
-        {/* Data Display (only if client-side & data exists) */}
         {isClient && projectData && (
           <div className="mt-8 space-y-6">
             <div className="bg-white p-6 rounded-lg shadow-md w-full">
@@ -141,12 +132,10 @@ export function TurmerikDashboard() {
               </div>
             </div>
 
-            {/* ✅ Export Data Button */}
             <div className="flex justify-center mt-6">
               <button
                 onClick={exportToPDF}
-                className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
-              >
+                className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
                 Export Data
               </button>
             </div>
